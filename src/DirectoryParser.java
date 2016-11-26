@@ -18,7 +18,7 @@ public class DirectoryParser {
 	 * @return true if successful, otherwise false
 	 * @param  directory
 	 */
-	public boolean parseDirectory(String pDir, Classification classification){
+	public boolean parseDirectory(String pDir, Callback callback){
 		Path directory = Paths.get(pDir).toAbsolutePath();
 
 		if(!Files.exists(directory)){
@@ -45,7 +45,7 @@ public class DirectoryParser {
 					if(file.toString().endsWith(".txt")){
 						docNum++;
 						System.out.println(file.toString());
-						classification.parse(file.toString());
+						callback.func(file.toString());
 
 						// do something with document
 					}

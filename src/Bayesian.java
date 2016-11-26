@@ -1,14 +1,12 @@
 
-public class Bayesian extends Classification{
+public class Bayesian{
 
 	public Bayesian(){
 
 	}
 
-	@Override
-	public void parse(String path) {
-		// TODO Auto-generated method stub
-
+	public void learn(String file){
+		System.out.println(file);
 	}
 
 }
