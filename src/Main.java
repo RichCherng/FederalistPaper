@@ -18,6 +18,13 @@ public class Main {
 //			aDP.parseDirectory(line);
 //		}
 
-		aDP.parseDirectory(PATH_HAMILTON_AND_MADISON);
+		Bayesian aB = new Bayesian();
+		aDP.parseDirectory(PATH_HAMILTON, new Callback(){
+			@Override
+			public void func(String pDocPath) {
+				// TODO Auto-generated method stub
+				aB.learn("HAMILTON", pDocPath);
+			}
+		});
 	}
 }
