@@ -1,3 +1,5 @@
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
@@ -5,6 +7,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.util.Scanner;
 
 public class DirectoryParser {
 
@@ -45,7 +48,17 @@ public class DirectoryParser {
 					if(file.toString().endsWith(".txt")){
 						docNum++;
 						System.out.println(file.toString());
-						callback.func(file.toString());
+						String fileContent = "";
+						try {
+							Scanner readFile = new Scanner(new File(file.toString()));
+							while(readFile.hasNextLine()){
+								fileContent += readFile.nextLine();
+							}
+						} catch (FileNotFoundException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+						callback.func(file.toFile().getName(), fileContent);
 
 						// do something with document
 					}

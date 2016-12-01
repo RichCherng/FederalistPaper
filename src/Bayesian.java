@@ -9,13 +9,16 @@ public class Bayesian{
 		mClassList = new HashMap<String, DocumentClass>();
 	}
 
-	public void learn(String pClass,String pFile){
+	public void learn(String pClass,String pFileName, String pFileContent){
 //		System.out.println(file);
 		if(mClassList.containsKey(pClass)){
 			DocumentClass c = mClassList.get(pClass);
 		} else {
 			mClassList.put(pClass, new DocumentClass());
 		}
+
+		System.out.println(pFileName);
+		System.out.println(pFileContent);
 	}
 
 

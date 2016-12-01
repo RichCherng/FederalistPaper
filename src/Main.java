@@ -21,9 +21,10 @@ public class Main {
 		Bayesian aB = new Bayesian();
 		aDP.parseDirectory(PATH_HAMILTON, new Callback(){
 			@Override
-			public void func(String pDocPath) {
+			public void func(String pFileName, String pFileContent) {
 				// TODO Auto-generated method stub
-				aB.learn("HAMILTON", pDocPath);
+				aB.learn("HAMILTON", pFileName, pFileContent);
+//				rchio.learn("HAMILTON", pFileName, pFileContent);
 			}
 		});
 	}
