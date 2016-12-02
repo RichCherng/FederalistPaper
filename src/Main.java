@@ -13,10 +13,7 @@ public class Main {
 
 		Scanner reader = new Scanner(System.in);
 		DirectoryParser aDP = new DirectoryParser();
-//		while(true){
-//			String line = reader.nextLine();
-//			aDP.parseDirectory(line);
-//		}
+
 
 		Bayesian aB = new Bayesian();
 		aDP.parseDirectory(PATH_HAMILTON, new Callback(){
@@ -24,8 +21,26 @@ public class Main {
 			public void func(String pFileName, String pFileContent) {
 				// TODO Auto-generated method stub
 				aB.learn("HAMILTON", pFileName, pFileContent);
-//				rchio.learn("HAMILTON", pFileName, pFileContent);
 			}
 		});
+
+		aDP.parseDirectory(PATH_MADISON, new Callback(){
+			@Override
+			public void func(String pFileName, String pFileContent) {
+				// TODO Auto-generated method stub
+				aB.learn("MADISON", pFileName, pFileContent);
+			}
+		});
+
+		aDP.parseDirectory(PATH_JAY, new Callback(){
+			@Override
+			public void func(String pFileName, String pFileContent) {
+				// TODO Auto-generated method stub
+				aB.learn("JAY", pFileName, pFileContent);
+			}
+		});
+
+		aB.generateTerm(50);
+
 	}
 }
