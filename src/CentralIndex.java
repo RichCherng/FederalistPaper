@@ -6,12 +6,14 @@ public class CentralIndex {
 
 	private HashSet<String> 				mDocList; // List of document's name
 	private HashSet<String> 				mVocab; // List of all vocab
+	private HashSet<String>					mClassNames; // List of all classes
 	private HashMap<String, DocumentClass> 	mClassMap; // Map of author to their class
 	private HashMap<String, Document>		mDocMap; // Map od document name to their class
 
 	public CentralIndex(){
 		mVocab 		= new HashSet<String>();
 		mDocList 	= new HashSet<String>();
+		mClassNames = new HashSet<String>();
 		mClassMap 	= new HashMap<String, DocumentClass>();
 		mDocMap		= new HashMap<String, Document>();
 	}
@@ -28,6 +30,7 @@ public class CentralIndex {
  		} else {
  			dClass = new DocumentClass(pClassName);
  			mClassMap.put(pClassName, dClass);
+ 			mClassNames.add(pClassName);
  		}
 
 		// Document
@@ -45,6 +48,44 @@ public class CentralIndex {
 			dClass.add(words[i], pFileName); // put word into class
 			doc.addTerm(words[i]); // Put word into doc info
 		}
+	}
+
+	public void debug(){
+
+		for(String s: mClassNames){
+			System.out.println(s);
+		}
+
+		DocumentClass author = mClassMap.get("HAMILTON");
+		author.getPosting("hi");
+	}
+
+	public ArrayList<String> getDocList(){
+		return new ArrayList<String>(mDocList);
+	}
+
+	public int getDocCountContain(String pClassName, String pWord){
+		DocumentClass author 	= mClassMap.get(pClassName);
+		Posting p 				= author.getPosting(pWord);
+
+		if( p == null){
+			return 0;
+		} else {
+			return p.getFileName().size();
+		}
+	}
+
+	public ArrayList<String> getDocInClass(String pClass){
+		DocumentClass author = mClassMap.get(pClass);
+		return new ArrayList<String>(author.getDocList());
+	}
+
+	public ArrayList<String> getVocab(){
+		return new ArrayList<String>(mVocab);
+	}
+
+	public ArrayList<String> getClassName(){
+		return new ArrayList<String>(mClassNames);
 	}
 
 	private class Document{
@@ -72,10 +113,12 @@ public class CentralIndex {
 	private class DocumentClass{
 
 		private String mName;
+		private HashSet<String> mDocList;
 		private HashMap<String, Posting> mPosting;
 
 		public DocumentClass(String pName){
 			mName 		= pName;
+			mDocList 	= new HashSet<String>();
 			mPosting 	= new HashMap<String, Posting>();
 		}
 
@@ -84,6 +127,8 @@ public class CentralIndex {
 		}
 
 		public void add(String pTerm, String pDocName){
+
+			mDocList.add(pDocName);
 
 			Posting p = null;
 			if(mPosting.containsKey(pTerm)){
@@ -98,6 +143,14 @@ public class CentralIndex {
 			p.addDoc(pDocName); // Adding to hashset, no duplicate
 			p.addFreq(); // Count the word frequency
 
+		}
+
+		public HashSet<String> getDocList(){
+			return mDocList;
+		}
+
+		public Posting getPosting(String pTerm){
+			return mPosting.get(pTerm);
 		}
 	}
 
@@ -118,6 +171,10 @@ public class CentralIndex {
 
 		public ArrayList<String> getPosting(){
 			return new ArrayList<String>(mFileName);
+		}
+
+		public HashSet<String> getFileName(){
+			return mFileName;
 		}
 
 		public int getFrequency(){

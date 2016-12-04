@@ -14,7 +14,7 @@ public class Main {
 		Scanner reader 		= new Scanner(System.in);
 		DirectoryParser aDP = new DirectoryParser();
 		CentralIndex aCI	= new CentralIndex();
-		Bayesian aB 		= new Bayesian();
+		Bayesian aB 		= new Bayesian(aCI);
 
 
 
@@ -45,33 +45,7 @@ public class Main {
 			}
 		});
 
-
-
-//		aDP.parseDirectory(PATH_HAMILTON, new Callback(){
-//			@Override
-//			public void func(String pFileName, String pFileContent) {
-//				// TODO Auto-generated method stub
-//				aB.learn("HAMILTON", pFileName, pFileContent);
-//			}
-//		});
-
-//		aDP.parseDirectory(PATH_MADISON, new Callback(){
-//			@Override
-//			public void func(String pFileName, String pFileContent) {
-//				// TODO Auto-generated method stub
-//				aB.learn("MADISON", pFileName, pFileContent);
-//			}
-//		});
-
-//		aDP.parseDirectory(PATH_JAY, new Callback(){
-//			@Override
-//			public void func(String pFileName, String pFileContent) {
-//				// TODO Auto-generated method stub
-//				aB.learn("JAY", pFileName, pFileContent);
-//			}
-//		});
-
-//		aB.generateTerm(50);
+		aB.generateTerm(50);
 
 	}
 }
