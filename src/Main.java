@@ -25,8 +25,28 @@ public class Main {
 				// TODO Auto-generated method stub
 				aCI.index("HAMILTON", pFileName, pFileContent);
 			}
-
 		});
+
+		aDP.parseDirectory(PATH_MADISON, new Callback(){
+
+			@Override
+			public void func(String pFileName, String pFileContent) {
+				// TODO Auto-generated method stub
+				aCI.index("MADISON", pFileName, pFileContent);
+			}
+		});
+
+		aDP.parseDirectory(PATH_JAY, new Callback(){
+
+			@Override
+			public void func(String pFileName, String pFileContent) {
+				// TODO Auto-generated method stub
+				aCI.index("JAY", pFileName, pFileContent);
+			}
+		});
+
+
+
 //		aDP.parseDirectory(PATH_HAMILTON, new Callback(){
 //			@Override
 //			public void func(String pFileName, String pFileContent) {
@@ -34,7 +54,7 @@ public class Main {
 //				aB.learn("HAMILTON", pFileName, pFileContent);
 //			}
 //		});
-//
+
 //		aDP.parseDirectory(PATH_MADISON, new Callback(){
 //			@Override
 //			public void func(String pFileName, String pFileContent) {
@@ -42,7 +62,7 @@ public class Main {
 //				aB.learn("MADISON", pFileName, pFileContent);
 //			}
 //		});
-//
+
 //		aDP.parseDirectory(PATH_JAY, new Callback(){
 //			@Override
 //			public void func(String pFileName, String pFileContent) {
@@ -50,7 +70,7 @@ public class Main {
 //				aB.learn("JAY", pFileName, pFileContent);
 //			}
 //		});
-//
+
 //		aB.generateTerm(50);
 
 	}
