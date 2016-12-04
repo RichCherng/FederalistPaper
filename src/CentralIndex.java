@@ -39,7 +39,7 @@ public class CentralIndex {
 
 
 		/** Parse File Content **/
-		String[] words = pFileContent.split("\\s+");
+		String[] words = pFileContent.split("[\\W]");
 		for(int i = 0; i < words.length; i++){
 
 			words[i] = words[i].replaceAll("[^a-zA-Z0-9]+" , "").toLowerCase(); // Normalize Word

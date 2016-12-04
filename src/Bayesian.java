@@ -40,7 +40,7 @@ public class Bayesian{
 		}
 
 		// Could keep track of whoes word got pick here
-
+		System.out.println(pWord + " " + max);
 		return 0.0;
 	}
 
@@ -65,11 +65,25 @@ public class Bayesian{
 		double N10 = N1x - N11;
 		double N00 = Nx0 - N10;
 
-		double ar1 = (N11/N) + ( Math.log( (N*N11) / (N1x*Nx1) ) / Math.log(2) );
-		double ar2 = (N10/N) + ( Math.log( (N*N10) / (N1x*Nx0) ) / Math.log(2) );
-		double ar3 = (N01/N) + ( Math.log( (N*N01) / (N0x*Nx1) ) / Math.log(2) );
-		double ar4 = (N00/N) + ( Math.log( (N*N00) / (N0x*N0x) ) / Math.log(2) );
 
+//		BigDecimal  A = new BigDecimal(N * N11);
+//		BigDecimal  B = new BigDecimal(N1x*Nx1);
+//		System.out.println(A.toString());
+//		System.out.println(N*N11);
+//		System.out.println(B.toString());
+//		System.out.println(N1x*Nx1);
+
+
+
+//		double a1 = (N11/N) + ( Math.log( (N*N11) / (N1x*Nx1) ) / Math.log(2) );
+//		double a2 = (N10/N) + ( Math.log( (N*N10) / (N1x*Nx0) ) / Math.log(2) );
+//		double a3 = (N01/N) + ( Math.log( (N*N01) / (N0x*Nx1) ) / Math.log(2) );
+//		double a4 = (N00/N) + ( Math.log( (N*N00) / (N0x*N0x) ) / Math.log(2) );
+
+		double ar1 = (N11/N) + log2( N*N11, N1x*Nx1 );
+		double ar2 = (N10/N) + log2( N*N10, N1x*Nx0 );
+		double ar3 = (N01/N) + log2( N*N01, N0x*Nx1 );
+		double ar4 = (N00/N) + log2( N*N00, N0x*N0x );
 //		System.out.println(N00 + " " + (N0x - N01));
 
 //				System.out.println(pWord + " : "  + N11);
@@ -77,8 +91,26 @@ public class Bayesian{
 //		System.out.println(Nx1);
 //		System.out.println(Nx0);
 //		System.out.println(N0x);
-//		System.out.println(pWord + " : " + (ar1 + ar2 + ar3 + ar4));
+
+//		System.out.println(Math.log(0));
+//		System.out.println(ar1);
+//		System.out.println(ar2);
+//		System.out.println(ar3);
+//		System.out.println(ar4);
+//		System.out.println((float)(N*N11) / (float)(N1x*Nx1));
+//		System.out.println((float)(N*N10) / (float)(N1x*Nx0));
+//		System.out.println((float)(N*N01) / (float)(N0x*Nx1));
+//		System.out.println((float)(N*N00) / (float)(N0x*N0x));
 		return ar1 + ar2 + ar3 + ar4;
+	}
+
+	private double log2(double top, double bottom){
+		if (top * bottom == 0){
+			// Contain 0
+			return 0.0;
+		}
+
+		return Math.log( top/ bottom) / Math.log(2);
 	}
 
 	public void debug(){
