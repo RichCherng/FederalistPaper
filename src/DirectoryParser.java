@@ -52,7 +52,7 @@ public class DirectoryParser {
 						try {
 							Scanner readFile = new Scanner(new File(file.toString()));
 							while(readFile.hasNextLine()){
-								fileContent += readFile.nextLine();
+								fileContent += "\n"+readFile.nextLine();
 							}
 						} catch (FileNotFoundException e) {
 							// TODO Auto-generated catch block

@@ -48,9 +48,9 @@ public class Bayesian{
 	private double calcI(String pClassName, String pWord, ArrayList<String> pClassList){
 
 		double N 	= aCI.getDocList().size(); // # of all documents
-		double N11 = aCI.getDocCountContain(pClassName, pWord); // # of document contain word and in that class, length of fileName in posting
+		double N11 	= aCI.getDocCountContain(pClassName, pWord); // # of document contain word and in that class, length of fileName in posting
 
-		double N1x = N11; // # of document contain the term
+		double N1x 	= N11; // # of document contain the term
 		for(String c : pClassList){
 			if(!c.equals(pClassName)){
 				N1x += aCI.getDocCountContain(c, pWord);
