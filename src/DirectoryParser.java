@@ -58,7 +58,7 @@ public class DirectoryParser {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
 						}
-//						System.out.println(file.toString());
+						System.out.println(file.toString());
 						callback.func(file.toFile().getName(), fileContent);
 
 						// do something with document

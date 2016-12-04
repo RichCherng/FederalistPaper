@@ -11,36 +11,67 @@ public class Main {
 
 	public static void main(String[] args){
 
-		Scanner reader = new Scanner(System.in);
+		Scanner reader 		= new Scanner(System.in);
 		DirectoryParser aDP = new DirectoryParser();
+		CentralIndex aCI	= new CentralIndex();
+		Bayesian aB 		= new Bayesian();
 
 
-		Bayesian aB = new Bayesian();
+
 		aDP.parseDirectory(PATH_HAMILTON, new Callback(){
+
 			@Override
 			public void func(String pFileName, String pFileContent) {
 				// TODO Auto-generated method stub
-				aB.learn("HAMILTON", pFileName, pFileContent);
+				aCI.index("HAMILTON", pFileName, pFileContent);
 			}
 		});
 
 		aDP.parseDirectory(PATH_MADISON, new Callback(){
+
 			@Override
 			public void func(String pFileName, String pFileContent) {
 				// TODO Auto-generated method stub
-				aB.learn("MADISON", pFileName, pFileContent);
+				aCI.index("MADISON", pFileName, pFileContent);
 			}
 		});
 
 		aDP.parseDirectory(PATH_JAY, new Callback(){
+
 			@Override
 			public void func(String pFileName, String pFileContent) {
 				// TODO Auto-generated method stub
-				aB.learn("JAY", pFileName, pFileContent);
+				aCI.index("JAY", pFileName, pFileContent);
 			}
 		});
 
-		aB.generateTerm(50);
+
+
+//		aDP.parseDirectory(PATH_HAMILTON, new Callback(){
+//			@Override
+//			public void func(String pFileName, String pFileContent) {
+//				// TODO Auto-generated method stub
+//				aB.learn("HAMILTON", pFileName, pFileContent);
+//			}
+//		});
+
+//		aDP.parseDirectory(PATH_MADISON, new Callback(){
+//			@Override
+//			public void func(String pFileName, String pFileContent) {
+//				// TODO Auto-generated method stub
+//				aB.learn("MADISON", pFileName, pFileContent);
+//			}
+//		});
+
+//		aDP.parseDirectory(PATH_JAY, new Callback(){
+//			@Override
+//			public void func(String pFileName, String pFileContent) {
+//				// TODO Auto-generated method stub
+//				aB.learn("JAY", pFileName, pFileContent);
+//			}
+//		});
+
+//		aB.generateTerm(50);
 
 	}
 }
