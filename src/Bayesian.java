@@ -1,9 +1,16 @@
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
 
 public class Bayesian{
 
 
 	private CentralIndex aCI;
+	private ArrayList<String> mTerms;
+
+	/** For purpose of which words belong to whom **/
+	private HashMap<String, String> mTermAuthor;
 
 	public Bayesian(CentralIndex pCI){
 		aCI = pCI;
@@ -14,13 +21,52 @@ public class Bayesian{
 	 * Generate T term list (mutual selection)
 	 * @param pTermNum = size of T list
 	 */
-	public void generateTerm(int pTermNum){
+	public ArrayList<String> generateTerm(int pTermNum){
 
-		ArrayList<String> vocabList = aCI.getVocab();
+		mTerms 		= new ArrayList<String>();
+		mTermAuthor = new HashMap<String, String>();
+		ArrayList<String> vocabList = aCI.getVocab(); // List of all vocab
 
+		if(vocabList.size() < pTermNum){
+			// Exit because not enough vocab
+			return null;
+		}
+
+		/** Find top N term with the highest iValues **/
+		HashMap<Double, ArrayList<String>> valueMap = new HashMap<Double, ArrayList<String>>();
+////		ArrayList<Double> values = new ArrayList<Double>();
+		HashSet<Double> values = new HashSet<Double>();
 		for(String word: vocabList){
 			double iValue = maxCalcI(word);
+			values.add(iValue);
+
+			if(valueMap.containsKey(iValue)){
+				valueMap.get(iValue).add(word);
+				values.add(iValue);
+			} else {
+				valueMap.put(iValue, new ArrayList<String>());
+				valueMap.get(iValue).add(word);
+				values.add(iValue);
+			}
+			values.add(iValue);
 		}
+
+		// Sort the iValue
+		ArrayList<Double> iValues = new ArrayList<Double>(values);
+		Collections.sort(iValues);
+		Collections.reverse(iValues);
+		for(Double d: iValues){
+
+			for(String w: valueMap.get(d)){
+				mTerms.add(w);
+				if(mTerms.size() == pTermNum){
+					return mTerms;
+				}
+			}
+
+		}
+
+		return null;
 
 	}
 
@@ -39,9 +85,9 @@ public class Bayesian{
 			}
 		}
 
-		// Could keep track of whoes word got pick here
-		System.out.println(pWord + " " + max);
-		return 0.0;
+//		System.out.println(pWord + " " + max);
+		mTermAuthor.put(pWord, className);
+		return max;
 	}
 
 
@@ -111,6 +157,12 @@ public class Bayesian{
 		}
 
 		return Math.log( top/ bottom) / Math.log(2);
+	}
+
+	public void printSelectedWord(){
+		for(String s: mTerms){
+			System.out.println(s + " : " + mTermAuthor.get(s));
+		}
 	}
 
 	public void debug(){

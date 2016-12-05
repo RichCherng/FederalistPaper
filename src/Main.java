@@ -45,7 +45,11 @@ public class Main {
 			}
 		});
 
-		aB.generateTerm(50);
+
+
+//		aB.generateTerm(50);
+//		System.out.println(aB.generateTerm(50).size());
+//		aB.printSelectedWord();
 
 	}
 }
