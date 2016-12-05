@@ -59,6 +59,14 @@ public class CentralIndex {
 		author.getPosting("hi");
 	}
 
+	public ArrayList<String> getTermInDoc(String pDocName){
+		return mDocMap.get(pDocName).getTerms();
+	}
+
+	public int getTermFreq(String pDocName, String term){
+		return mDocMap.get(pDocName).getTermFreq(term);
+	}
+
 	public ArrayList<String> getDocList(){
 		return new ArrayList<String>(mDocList);
 	}
@@ -91,21 +99,34 @@ public class CentralIndex {
 
 		private String 						mName;
 		private HashMap<String, Integer> 	termFreq;
+		private HashSet<String> 			mTermList;
 		public Document(String pName){
 
 			mName 		= pName;
 			termFreq 	= new HashMap<String, Integer>();
+			mTermList	= new HashSet<String>();
 		}
 
 		public void addTerm(String pTerm){
 
 			String stem = PorterStemmer.processToken(pTerm);
+			mTermList.add(stem);
 			if(termFreq.containsKey(stem)){
 				termFreq.put(stem, termFreq.get(stem)+ 1);
 			} else {
 				termFreq.put(stem, 1);
 			}
 		}
+
+		public ArrayList<String> getTerms(){
+			return new ArrayList<String>(mTermList);
+		}
+
+		public int getTermFreq(String pTerm){
+			return termFreq.get(pTerm);
+		}
+
+
 	}
 
 
