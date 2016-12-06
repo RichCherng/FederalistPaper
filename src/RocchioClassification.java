@@ -1,4 +1,7 @@
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.TreeMap;
 
 /**
  * Created by LeafChernchaosil on 12/4/16.
@@ -6,18 +9,26 @@ import java.util.*;
 public class RocchioClassification {
 
     private CentralIndex mCI;
+    private CentralIndex queryCI;
     // HashMap that maps Class --> [ term ---> weight ]
     HashMap<String, TreeMap<String, Double>> classToCentroidHM;
 
-    public RocchioClassification(CentralIndex pCI) {
-        mCI = pCI;
+    public RocchioClassification() {
         classToCentroidHM = new HashMap<String, TreeMap<String, Double>>();
+    }
+
+    public void setCentralIndex(CentralIndex pCI) {
+        mCI = pCI;
+    }
+
+    public void setQueryIndex(CentralIndex pCI) {
+        queryCI = pCI;
     }
 
     /**
      * Classify all the training data
      */
-    public void run() {
+    public void classifyTrainingData() {
         // Get ArrayList of class names
         ArrayList<String> classes = mCI.getClassName();
 
@@ -35,7 +46,7 @@ public class RocchioClassification {
                 // Get all the terms in the document
                 ArrayList<String> termsInDoc = mCI.getTermInDoc(eachDoc);
                 // Get the Ld
-                double Ld = this.returnLd(termsInDoc, eachDoc);
+                double Ld = this.returnLd(termsInDoc, eachDoc, mCI);
 
                 // For each term in the document, calculate W(d,t) and use it as the components of the vector
                 // The W(d,t) is then normalized by L(d)
@@ -59,25 +70,36 @@ public class RocchioClassification {
         }
     }
 
+    public void classifyUnknownDocument() {
+        System.out.println("Classify the unknown documents...");
+        ArrayList<String> unknownClass = queryCI.getClassName();
+        for (String unknownClassName : unknownClass) {
+            ArrayList<String> documentsInUnknownClass = queryCI.getDocInClass(unknownClassName);
+            for (String eachUnknownDocument : documentsInUnknownClass) {
+                String classOfDocument = returnClassOfDocument(eachUnknownDocument);
+                System.out.println(eachUnknownDocument + ": " + classOfDocument);
+            }
+        }
+    }
     /**
-     * Given a document name, return the class
-     * @param pDocName - Document name
+     * Given an unknown document name, return the class
+     * @param pUnknownDocName - Unknown document name
      * @return The class the document belongs
      */
-    public String returnClassOfDocument(String pDocName) {
+    public String returnClassOfDocument(String pUnknownDocName) {
         // Have to Construct a normalized vector for the unknown document first
 
         // A TreeMap that maps a term to the weight, this is the vector
         TreeMap<String, Double> unknownDocVector = new TreeMap<String, Double>();
 
         // Get all the terms in the document
-        ArrayList<String> termsInDoc = mCI.getTermInDoc(pDocName);
-        double Ld = returnLd(termsInDoc, pDocName);
+        ArrayList<String> termsInUnknownDoc = queryCI.getTermInDoc(pUnknownDocName);
+        double Ld = returnLd(termsInUnknownDoc, pUnknownDocName, queryCI);
 
         // For each term in the document, calculate W(d,t) and use it as the components of the vector
         // The W(d,t) is then normalized by L(d)
-        for (String eachTerm : termsInDoc) {
-            int termFreqInDoc = mCI.getTermFreq(pDocName, eachTerm); // tf(t,d)
+        for (String eachTerm : termsInUnknownDoc) {
+            int termFreqInDoc = queryCI.getTermFreq(pUnknownDocName, eachTerm); // tf(t,d)
             double weightOfTerm = 1 + Math.log(termFreqInDoc); // W(d,t)
             double normalizedWeight = (weightOfTerm / Ld);
             this.putTermInVector(unknownDocVector, eachTerm, normalizedWeight);
@@ -129,12 +151,12 @@ public class RocchioClassification {
      * @param pDocument - Current document
      * @return Ld
      */
-    private double returnLd(ArrayList<String> pTermsInDoc, String pDocument) {
+    private double returnLd(ArrayList<String> pTermsInDoc, String pDocument, CentralIndex pCI) {
         // Calculate Ld
         double sumOfWeightSquared = 0;
         for (String eachTerm : pTermsInDoc) {
             // tf(t,d)
-            int termFreqInDoc = mCI.getTermFreq(pDocument, eachTerm);
+            int termFreqInDoc = pCI.getTermFreq(pDocument, eachTerm);
             // W(d,t) = 1 + ln( tf(t,d) )
             double weightOfTerm = 1 + Math.log(termFreqInDoc);
             sumOfWeightSquared += (weightOfTerm * weightOfTerm);

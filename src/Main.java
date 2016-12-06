@@ -16,7 +16,10 @@ public class Main {
 		DirectoryParser aDP = new DirectoryParser();
 		CentralIndex aCI	= new CentralIndex();
 		Bayesian aB 		= new Bayesian(aCI);
+		RocchioClassification aRC = new RocchioClassification();
 
+		DirectoryParser queryDirectoryParse = new DirectoryParser();
+		CentralIndex queryIndex             = new CentralIndex();
 
 
 		/**** 	Indexing 	****/
@@ -46,6 +49,19 @@ public class Main {
 				aCI.index("JAY", pFileName, pFileContent);
 			}
 		});
+
+		/** Query directory parsing and indexing **/
+		queryDirectoryParse.parseDirectory(PATH_HAMILTON_OR_MADISON, new Callback() {
+            @Override
+            public void func(String pFileName, String pFileContent) {
+                queryIndex.index("Unkown", pFileName, pFileContent);
+            }
+        });
+
+		aRC.setCentralIndex(aCI);
+		aRC.setQueryIndex(queryIndex);
+		aRC.classifyTrainingData();
+        aRC.classifyUnknownDocument();
 
 		/************************************************************/
 
