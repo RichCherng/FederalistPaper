@@ -43,9 +43,10 @@ public class CentralIndex {
 		for(int i = 0; i < words.length; i++){
 
 			words[i] = words[i].replaceAll("[^a-zA-Z0-9]+" , "").toLowerCase(); // Normalize Word
-			mVocab.add(words[i]); // Add word to vocab list
-			dClass.add(words[i], pFileName); // put word into class
-			doc.addTerm(words[i]); // Put word into doc info
+			String stem = PorterStemmer.processToken(words[i]);
+			mVocab.add(stem); // Add word to vocab list
+			dClass.add(stem, pFileName); // put word into class
+			doc.addTerm(stem); // Put word into doc info
 		}
 	}
 

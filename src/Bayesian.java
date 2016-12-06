@@ -86,8 +86,9 @@ public class Bayesian{
 			double pi = 1;
 			for(int i = 0; i < words.length; i++){
 				words[i] = words[i].replaceAll("[^a-zA-Z0-9]+" , "").toLowerCase(); // Normalize Word
-				if(mPTCTable.containsKey(words[i])){
-					pi *= mPTCTable.get(words[i]).get(c) * 10; // Increase by factor of 10 to help reduce number becoming too small
+				String stem = PorterStemmer.processToken(words[i]);
+				if(mPTCTable.containsKey(stem)){
+					pi *= mPTCTable.get(stem).get(c) * 10; // Increase by factor of 10 to help reduce number becoming too small
 				}
 			}
 
@@ -129,7 +130,7 @@ public class Bayesian{
 			for(String c : aCI.getClassName()){
 				// Calculate PTC for each class for the term
 				row.put(c, calcPTC(c, term, sumFTC, pTerms.size()));
-				System.out.print(c+":"+row.get(c) + "\t");
+				System.out.print(c+":"+row.get(c) + "\t\t");
 			}
 			System.out.println();
 			mPTCTable.put(term, row);
@@ -199,10 +200,10 @@ public class Bayesian{
 //		double a3 = (N01/N) + ( Math.log( (N*N01) / (N0x*Nx1) ) / Math.log(2) );
 //		double a4 = (N00/N) + ( Math.log( (N*N00) / (N0x*N0x) ) / Math.log(2) );
 
-		double ar1 = (N11/N) + log2( N*N11, N1x*Nx1 );
-		double ar2 = (N10/N) + log2( N*N10, N1x*Nx0 );
-		double ar3 = (N01/N) + log2( N*N01, N0x*Nx1 );
-		double ar4 = (N00/N) + log2( N*N00, N0x*N0x );
+		double ar1 = (N11/N) * log2( N*N11, N1x*Nx1 );
+		double ar2 = (N10/N) * log2( N*N10, N1x*Nx0 );
+		double ar3 = (N01/N) * log2( N*N01, N0x*Nx1 );
+		double ar4 = (N00/N) * log2( N*N00, N0x*Nx0 );
 //		System.out.println(N00 + " " + (N0x - N01));
 
 //				System.out.println(pWord + " : "  + N11);
@@ -220,7 +221,23 @@ public class Bayesian{
 //		System.out.println((float)(N*N10) / (float)(N1x*Nx0));
 //		System.out.println((float)(N*N01) / (float)(N0x*Nx1));
 //		System.out.println((float)(N*N00) / (float)(N0x*N0x));
-
+//		if(pWord.equals("upon")){
+//			System.out.println( pClassName + " "+ pWord + " : " + (ar1 + ar2 + ar3 + ar4));
+//			System.out.println("N11 : "+N11);
+//			System.out.println("N00 : "+N00);
+//			System.out.println("N10 : "+N10);
+//			System.out.println("N01 : "+N01);
+//			System.out.println("N1X : "+N1x);
+//			System.out.println("N0X : "+N0x);
+//			System.out.println("NX1 : "+Nx1);
+//			System.out.println("NX0 : "+Nx0);
+//
+//
+//			System.out.println("Log N11 " + log2( N*N11, N1x*Nx1 ));
+//			System.out.println("Log N10 " + log2( N*N10, N1x*Nx0 ));
+//			System.out.println("Log N01 " + log2( N*N01, N0x*Nx1 ));
+//			System.out.println("Log N00 " + log2( N*N00, N0x*Nx0 ));
+//		}
 		return ar1 + ar2 + ar3 + ar4;
 	}
 
