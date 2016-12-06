@@ -59,10 +59,21 @@ public class CentralIndex {
 		author.getPosting("hi");
 	}
 
+	/**
+	 * List of document indexed
+	 * @return
+	 */
 	public ArrayList<String> getDocList(){
 		return new ArrayList<String>(mDocList);
 	}
 
+
+	/**
+	 * Get the document count of that word in the specificed class
+	 * @param pClassName
+	 * @param pWord
+	 * @return
+	 */
 	public int getDocCountContain(String pClassName, String pWord){
 		DocumentClass author 	= mClassMap.get(pClassName);
 		Posting p 				= author.getPosting(pWord);
@@ -74,15 +85,39 @@ public class CentralIndex {
 		}
 	}
 
+	public int getTermFreqInClass(String pClassName, String pWord){
+		DocumentClass author = mClassMap.get(pClassName);
+		Posting p = author.getPosting(pWord);
+
+		if(p == null){
+			return 0;
+		} else {
+			return p.getFrequency();
+		}
+	}
+
+	/**
+	 * get Document list in that class
+	 * @param pClass
+	 * @return
+	 */
 	public ArrayList<String> getDocInClass(String pClass){
 		DocumentClass author = mClassMap.get(pClass);
 		return new ArrayList<String>(author.getDocList());
 	}
 
+	/**
+	 * Get list of vocab that indexed
+	 * @return
+	 */
 	public ArrayList<String> getVocab(){
 		return new ArrayList<String>(mVocab);
 	}
 
+	/**
+	 * Get list of class name
+	 * @return
+	 */
 	public ArrayList<String> getClassName(){
 		return new ArrayList<String>(mClassNames);
 	}
@@ -168,9 +203,9 @@ public class CentralIndex {
 			mFileName.add(pDocName);
 		}
 
-		public ArrayList<String> getPosting(){
-			return new ArrayList<String>(mFileName);
-		}
+//		public ArrayList<String> getPosting(){
+//			return new ArrayList<String>(mFileName);
+//		}
 
 		public HashSet<String> getFileName(){
 			return mFileName;

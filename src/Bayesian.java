@@ -6,11 +6,11 @@ import java.util.HashSet;
 public class Bayesian{
 
 
-	private CentralIndex aCI;
-	private ArrayList<String> mTerms;
-
+	private CentralIndex 									aCI;
+	private ArrayList<String> 								mTerms;
+	private HashMap<String, HashMap<String, Double>> 		mPTCTable; // word -> (class -> ptc value)
 	/** For purpose of which words belong to whom **/
-	private HashMap<String, String> mTermAuthor;
+	private HashMap<String, String> 						mTermAuthor;
 
 	public Bayesian(CentralIndex pCI){
 		aCI = pCI;
@@ -60,14 +60,83 @@ public class Bayesian{
 			for(String w: valueMap.get(d)){
 				mTerms.add(w);
 				if(mTerms.size() == pTermNum){
+					calcPTCTable(mTerms);
 					return mTerms;
 				}
 			}
+		}
+		return null;
+	}
 
+
+	/**
+	 *	Classify document in to existing classes
+	 * @param pFileName
+	 * @param pFileContent
+	 * @return Most likely author
+	 */
+	public String classify(String pFileName, String pFileContent){
+
+		System.out.println(pFileName);
+		String[] words = pFileContent.split("\\s+");
+
+		double max_pi = 0;
+		String max_class = "";
+		for(String c: aCI.getClassName()){
+			double pi = 1;
+			for(int i = 0; i < words.length; i++){
+				words[i] = words[i].replaceAll("[^a-zA-Z0-9]+" , "").toLowerCase(); // Normalize Word
+				if(mPTCTable.containsKey(words[i])){
+					pi *= mPTCTable.get(words[i]).get(c) * 10; // Increase by factor of 10 to help reduce number becoming too small
+				}
+			}
+			if( max_pi < pi){
+				max_pi 		= pi;
+				max_class 	= c;
+			}
+			System.out.println(c + " : " + pi);
+		}
+//		System.out.println(pFileName + " : " + max_class);
+
+		return max_class;
+	}
+
+
+	/**
+	 * Generate PTC table from selected terms, T
+	 * @param pTerms - Selected Term
+	 */
+	private void calcPTCTable(ArrayList<String> pTerms){
+
+		// Calc sum of ftc e T
+		HashMap<String, Double> sumFTC = new HashMap<String, Double>(); // Clas -> sum of FTC of that class
+		for(String c: aCI.getClassName()){
+			double sum = 0;
+			for(String term: pTerms){
+				sum += aCI.getTermFreqInClass(c, term);
+			}
+			sumFTC.put(c, sum);
 		}
 
-		return null;
+		// Generate PTC table
+		System.out.println("PTC Table");
+		mPTCTable = new HashMap<String, HashMap<String, Double>>();
+		for(String term: pTerms){
+			HashMap<String, Double> row = new HashMap<String, Double>();
+			System.out.print(term + "\t");
+			for(String c : aCI.getClassName()){
+				// Calculate PTC for each class for the term
+				row.put(c, calcPTC(c, term, sumFTC, pTerms.size()));
+				System.out.print(row.get(c) + "\t");
+			}
+			System.out.println();
+			mPTCTable.put(term, row);
+		}
+	}
 
+	private double calcPTC(String pClassName, String pTerm, HashMap<String, Double> pSumFTC, int pTermCount){
+		double ftc = aCI.getTermFreqInClass(pClassName, pTerm) + 1;
+		return ftc/(pSumFTC.get(pClassName) + (double)pTermCount);
 	}
 
 	private double maxCalcI(String pWord){
@@ -147,6 +216,7 @@ public class Bayesian{
 //		System.out.println((float)(N*N10) / (float)(N1x*Nx0));
 //		System.out.println((float)(N*N01) / (float)(N0x*Nx1));
 //		System.out.println((float)(N*N00) / (float)(N0x*N0x));
+
 		return ar1 + ar2 + ar3 + ar4;
 	}
 
