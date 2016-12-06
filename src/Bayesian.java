@@ -80,7 +80,7 @@ public class Bayesian{
 		System.out.println(pFileName);
 		String[] words = pFileContent.split("\\s+");
 
-		double max_pi = 0;
+		double arg_max = 0;
 		String max_class = "";
 		for(String c: aCI.getClassName()){
 			double pi = 1;
@@ -90,8 +90,10 @@ public class Bayesian{
 					pi *= mPTCTable.get(words[i]).get(c) * 10; // Increase by factor of 10 to help reduce number becoming too small
 				}
 			}
-			if( max_pi < pi){
-				max_pi 		= pi;
+
+			double arg = ((double)aCI.getDocInClass(c).size() / (double) aCI.getDocList().size()) * pi;
+			if( arg_max < arg){
+				arg_max = arg;
 				max_class 	= c;
 			}
 			System.out.println(c + " : " + pi);
@@ -127,7 +129,7 @@ public class Bayesian{
 			for(String c : aCI.getClassName()){
 				// Calculate PTC for each class for the term
 				row.put(c, calcPTC(c, term, sumFTC, pTerms.size()));
-				System.out.print(row.get(c) + "\t");
+				System.out.print(c+":"+row.get(c) + "\t");
 			}
 			System.out.println();
 			mPTCTable.put(term, row);
@@ -136,7 +138,9 @@ public class Bayesian{
 
 	private double calcPTC(String pClassName, String pTerm, HashMap<String, Double> pSumFTC, int pTermCount){
 		double ftc = aCI.getTermFreqInClass(pClassName, pTerm) + 1;
-		return ftc/(pSumFTC.get(pClassName) + (double)pTermCount);
+		double sumFTC = pSumFTC.get(pClassName) + (double)pTermCount;
+
+		return ftc/sumFTC;
 	}
 
 	private double maxCalcI(String pWord){

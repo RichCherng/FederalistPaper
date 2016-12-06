@@ -50,7 +50,6 @@ public class Main {
 		/************************************************************/
 
 		aB.generateTerm(50);
-//		System.out.println(aB.generateTerm(50).size());
 		aB.printSelectedWord();
 
 		/** Classify **/
@@ -60,7 +59,7 @@ public class Main {
 			@Override
 			public void func(String pFileName, String pFileContent) {
 				// TODO Auto-generated method stub
-				results.add(pFileName + " : " + aB.classify(pFileName, pFileContent));
+				results.add("Bayesian : " + pFileName + "  " + aB.classify(pFileName, pFileContent));
 			}
 		});
 
