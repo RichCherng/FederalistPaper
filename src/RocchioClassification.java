@@ -70,6 +70,7 @@ public class RocchioClassification {
 
             // Put the class ---> centroid
             classToCentroidHM.put(eachClass, termToWeightVector);
+//            System.out.println("Class: " + eachClass);
 //            this.printVector(termToWeightVector);
         }
     }
@@ -120,7 +121,7 @@ public class RocchioClassification {
             }
             tempClassToCentroidHM.put(eachCentroid.getKey(), newTempTM);
         }
-
+//        this.printVector(unknownDocVector);
         // Now that we have the normalized vector of the unknown document
         // For each of the centroid of each class
         for (Map.Entry<String, TreeMap<String, Double>> eachCentroid : tempClassToCentroidHM.entrySet()) {
@@ -200,7 +201,9 @@ public class RocchioClassification {
      * @param pNormalizedWeight - Normalized weight
      */
     private void putTermInVector(TreeMap<String, Double> pVector, String pTerm, double pNormalizedWeight) {
-        if (!pTerm.equals(" ") && pTerm.length() > 0) {
+        // Term cannot be space, lenght < 0, and number
+        if (!pTerm.equals(" ") && pTerm.length() > 0 && !pTerm.matches(".*\\d+.*")
+                && !pTerm.equals("a") && !pTerm.equals("an")) {
             // If the component already existed for the term, just add to it
             if (pVector.containsKey(pTerm)) {
                 // Sum of the component of vectors

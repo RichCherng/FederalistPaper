@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Main {
@@ -75,27 +76,29 @@ public class Main {
 		aRC.setCentralIndex(aCI);
 		aRC.setQueryIndex(queryIndex);
 		aRC.classifyTrainingData();
+		System.out.println("Rocchio: ");
         aRC.classifyUnknownDocument();
+        System.out.println("Rocchio finished.\n");
 
 		/************************************************************/
 
-//		aB.generateTerm(50);
-//		aB.printSelectedWord();
+		aB.generateTerm(50);
+		aB.printSelectedWord();
 
 		/** Classify **/
-//		ArrayList<String> results = new ArrayList<String>();
-//		aDP.parseDirectory(PATH_HAMILTON_OR_MADISON, new Callback(){
-//
-//			@Override
-//			public void func(String pFileName, String pFileContent) {
-//				// TODO Auto-generated method stub
-//				results.add("Bayesian : " + pFileName + "  " + aB.classify(pFileName, pFileContent));
-//			}
-//		});
-//
-//		for(String r: results){
-//			System.out.println(r);
-//		}
+		ArrayList<String> results = new ArrayList<String>();
+		aDP.parseDirectory(PATH_HAMILTON_OR_MADISON, new Callback(){
+
+			@Override
+			public void func(String pFileName, String pFileContent) {
+				// TODO Auto-generated method stub
+				results.add("Bayesian : " + pFileName + "  " + aB.classify(pFileName, pFileContent));
+			}
+		});
+
+		for(String r: results){
+			System.out.println(r);
+		}
 
 	}
 }
