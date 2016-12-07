@@ -1,4 +1,3 @@
-import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Main {
@@ -9,6 +8,8 @@ public class Main {
 	static String PATH_JAY 					= "FederalistPaper/JAY";
 	static String PATH_HAMILTON_AND_MADISON = "FederalistPaper/HAMILTON AND MADISON";
 	static String PATH_HAMILTON_OR_MADISON 	= "FederalistPaper/HAMILTON OR MADISON";
+	static String PATH_TO_TEST              = "FederalistPaper/TEST";
+    static String PATH_TO_TEST_UNKNOWN      = "FederalistPaper/TEST_NEW_DOCS";
 
 	public static void main(String[] args){
 
@@ -16,8 +17,8 @@ public class Main {
 		DirectoryParser aDP = new DirectoryParser();
 		CentralIndex aCI	= new CentralIndex();
 		Bayesian aB 		= new Bayesian(aCI);
-		RocchioClassification aRC = new RocchioClassification();
 
+		RocchioClassification aRC = new RocchioClassification();
 		DirectoryParser queryDirectoryParse = new DirectoryParser();
 		CentralIndex queryIndex             = new CentralIndex();
 
@@ -58,6 +59,19 @@ public class Main {
             }
         });
 
+//        aDP.parseDirectory(PATH_TO_TEST, new Callback() {
+//            @Override
+//            public void func(String a, String b) {
+//                aCI.index("TEST", a, b);
+//            }
+//        });
+//        queryDirectoryParse.parseDirectory(PATH_TO_TEST_UNKNOWN, new Callback() {
+//            @Override
+//            public void func(String a, String b) {
+//                queryIndex.index("UNKNOWN", a, b);
+//            }
+//        });
+
 		aRC.setCentralIndex(aCI);
 		aRC.setQueryIndex(queryIndex);
 		aRC.classifyTrainingData();
@@ -65,23 +79,23 @@ public class Main {
 
 		/************************************************************/
 
-		aB.generateTerm(50);
-		aB.printSelectedWord();
+//		aB.generateTerm(50);
+//		aB.printSelectedWord();
 
 		/** Classify **/
-		ArrayList<String> results = new ArrayList<String>();
-		aDP.parseDirectory(PATH_HAMILTON_OR_MADISON, new Callback(){
-
-			@Override
-			public void func(String pFileName, String pFileContent) {
-				// TODO Auto-generated method stub
-				results.add("Bayesian : " + pFileName + "  " + aB.classify(pFileName, pFileContent));
-			}
-		});
-
-		for(String r: results){
-			System.out.println(r);
-		}
+//		ArrayList<String> results = new ArrayList<String>();
+//		aDP.parseDirectory(PATH_HAMILTON_OR_MADISON, new Callback(){
+//
+//			@Override
+//			public void func(String pFileName, String pFileContent) {
+//				// TODO Auto-generated method stub
+//				results.add("Bayesian : " + pFileName + "  " + aB.classify(pFileName, pFileContent));
+//			}
+//		});
+//
+//		for(String r: results){
+//			System.out.println(r);
+//		}
 
 	}
 }

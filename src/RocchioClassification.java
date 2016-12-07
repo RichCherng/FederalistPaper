@@ -43,10 +43,12 @@ public class RocchioClassification {
 
             // For each of the document in class, Ex: Doc1
             for (String eachDoc : documentsInClassArr) {
+//                System.out.println("Doc: " + eachDoc);
                 // Get all the terms in the document
                 ArrayList<String> termsInDoc = mCI.getTermInDoc(eachDoc);
                 // Get the Ld
                 double Ld = this.returnLd(termsInDoc, eachDoc, mCI);
+//                System.out.println("Ld: " + Ld);
 
                 // For each term in the document, calculate W(d,t) and use it as the components of the vector
                 // The W(d,t) is then normalized by L(d)
@@ -56,6 +58,7 @@ public class RocchioClassification {
                     double normalizedWeight = (weightOfTerm / Ld);
                     this.putTermInVector(termToWeightVector, eachTerm, normalizedWeight);
                 }
+//                this.printVector(termToWeightVector);
             }
 
             int numOfDocsInClass = documentsInClassArr.size();
@@ -67,17 +70,18 @@ public class RocchioClassification {
 
             // Put the class ---> centroid
             classToCentroidHM.put(eachClass, termToWeightVector);
+//            this.printVector(termToWeightVector);
         }
     }
 
     public void classifyUnknownDocument() {
-        System.out.println("Classify the unknown documents...");
         ArrayList<String> unknownClass = queryCI.getClassName();
         for (String unknownClassName : unknownClass) {
+//            System.out.println("UnknownClassName: " + unknownClassName);
             ArrayList<String> documentsInUnknownClass = queryCI.getDocInClass(unknownClassName);
             for (String eachUnknownDocument : documentsInUnknownClass) {
                 String classOfDocument = returnClassOfDocument(eachUnknownDocument);
-                System.out.println(eachUnknownDocument + ": " + classOfDocument);
+                System.out.println(eachUnknownDocument + ": " + classOfDocument + "\n");
             }
         }
     }
@@ -104,12 +108,22 @@ public class RocchioClassification {
             double normalizedWeight = (weightOfTerm / Ld);
             this.putTermInVector(unknownDocVector, eachTerm, normalizedWeight);
         }
+//        this.printVector(unknownDocVector);
 
         TreeMap<Double, String> distanceToClassTM = new TreeMap<>();
+        // Creating temp classToCentroidHM;
+        HashMap<String, TreeMap<String, Double>> tempClassToCentroidHM = new HashMap<String, TreeMap<String, Double>>();
+        for (Map.Entry<String, TreeMap<String, Double>> eachCentroid : classToCentroidHM.entrySet()) {
+            TreeMap<String, Double> newTempTM = new TreeMap<>();
+            for (Map.Entry<String, Double> eachTmEntry : eachCentroid.getValue().entrySet()) {
+                newTempTM.put(eachTmEntry.getKey(), eachTmEntry.getValue());
+            }
+            tempClassToCentroidHM.put(eachCentroid.getKey(), newTempTM);
+        }
 
         // Now that we have the normalized vector of the unknown document
         // For each of the centroid of each class
-        for (Map.Entry<String, TreeMap<String, Double>> eachCentroid : classToCentroidHM.entrySet()) {
+        for (Map.Entry<String, TreeMap<String, Double>> eachCentroid : tempClassToCentroidHM.entrySet()) {
             // Get the vector of the class
             TreeMap<String, Double> currentCentroidVector = eachCentroid.getValue();
 
@@ -124,6 +138,8 @@ public class RocchioClassification {
                 }
             }
 
+//            this.printVector(currentCentroidVector);
+
             // Run through Vector of the unknown document,
             //  Find the element that do not exist in Vector of the current class
             //   Insert that element to the centroid vector
@@ -134,14 +150,20 @@ public class RocchioClassification {
                 }
             }
 
+//            this.printVector(currentCentroidVector);
+
             double sum = 0;
             for (Map.Entry<String, Double> eachComponent : currentCentroidVector.entrySet()) {
                 sum += (eachComponent.getValue() * eachComponent.getValue());
             }
             double distance = Math.sqrt(sum);
+//            System.out.println("sum: " + sum);
+//            System.out.println("Distance: " + distance);
+//            System.out.println("For class: " + eachCentroid.getKey() + "\n");
             // Map the distance value to the class into TreeMap (distance(key) is sorted) upon inserting
             distanceToClassTM.put(distance, eachCentroid.getKey());
         }
+//        System.out.println("UnknownDoc " + pUnknownDocName + " belongs to " + distanceToClassTM.firstEntry().getValue() + "\n");
         return distanceToClassTM.firstEntry().getValue();
     }
 
@@ -155,12 +177,19 @@ public class RocchioClassification {
         // Calculate Ld
         double sumOfWeightSquared = 0;
         for (String eachTerm : pTermsInDoc) {
-            // tf(t,d)
-            int termFreqInDoc = pCI.getTermFreq(pDocument, eachTerm);
-            // W(d,t) = 1 + ln( tf(t,d) )
-            double weightOfTerm = 1 + Math.log(termFreqInDoc);
-            sumOfWeightSquared += (weightOfTerm * weightOfTerm);
+            if (eachTerm.length() > 0 && !eachTerm.equals(" ")) {
+                // tf(t,d)
+                int termFreqInDoc = pCI.getTermFreq(pDocument, eachTerm);
+                // W(d,t) = 1 + ln( tf(t,d) )
+                double weightOfTerm = 1 + Math.log(termFreqInDoc);
+                sumOfWeightSquared += (weightOfTerm * weightOfTerm);
+//                System.out.println("Term: " + eachTerm);
+//                System.out.println("tf(t,d): " + termFreqInDoc);
+//                System.out.println("W(t,d): " + weightOfTerm);
+//                System.out.println("sumSquared: " + sumOfWeightSquared);
+            }
         }
+//        System.out.println("sqrt of sum: " + Math.sqrt(sumOfWeightSquared));
         return Math.sqrt(sumOfWeightSquared);
     }
 
@@ -171,15 +200,25 @@ public class RocchioClassification {
      * @param pNormalizedWeight - Normalized weight
      */
     private void putTermInVector(TreeMap<String, Double> pVector, String pTerm, double pNormalizedWeight) {
-        // If the component already existed for the term, just add to it
-        if (pVector.containsKey(pTerm)) {
-            // Sum of the component of vectors
-            double sum = pVector.get(pTerm) + pNormalizedWeight;
-            // Put in new balue
-            pVector.put(pTerm, sum);
+        if (!pTerm.equals(" ") && pTerm.length() > 0) {
+            // If the component already existed for the term, just add to it
+            if (pVector.containsKey(pTerm)) {
+                // Sum of the component of vectors
+                double sum = pVector.get(pTerm) + pNormalizedWeight;
+                // Put in new balue
+                pVector.put(pTerm, sum);
+            }
+            else { // If not, set the new value
+                pVector.put(pTerm, pNormalizedWeight);
+            }
         }
-        else { // If not, set the new value
-            pVector.put(pTerm, pNormalizedWeight);
+    }
+
+    private void printVector(TreeMap<String, Double> pVector) {
+        System.out.print("< ");
+        for (Map.Entry<String, Double> eachEntry : pVector.entrySet()) {
+            System.out.print(eachEntry.getKey() + ":" + eachEntry.getValue() + ", ");
         }
+        System.out.println(">\n");
     }
 }
