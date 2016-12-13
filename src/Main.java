@@ -9,6 +9,8 @@ public class Main {
 	static String PATH_JAY 					= "FederalistPaper/JAY";
 	static String PATH_HAMILTON_AND_MADISON = "FederalistPaper/HAMILTON AND MADISON";
 	static String PATH_HAMILTON_OR_MADISON 	= "FederalistPaper/HAMILTON OR MADISON";
+	static String PATH_TO_TEST              = "FederalistPaper/TEST";
+    static String PATH_TO_TEST_UNKNOWN      = "FederalistPaper/TEST_NEW_DOCS";
 
 	public static void main(String[] args){
 
@@ -17,6 +19,9 @@ public class Main {
 		CentralIndex aCI	= new CentralIndex();
 		Bayesian aB 		= new Bayesian(aCI);
 
+		RocchioClassification aRC = new RocchioClassification();
+		DirectoryParser queryDirectoryParse = new DirectoryParser();
+		CentralIndex queryIndex             = new CentralIndex();
 
 
 		/**** 	Indexing 	****/
@@ -47,10 +52,38 @@ public class Main {
 			}
 		});
 
+		/** Query directory parsing and indexing **/
+		queryDirectoryParse.parseDirectory(PATH_HAMILTON_OR_MADISON, new Callback() {
+            @Override
+            public void func(String pFileName, String pFileContent) {
+                queryIndex.index("Unkown", pFileName, pFileContent);
+            }
+        });
+
+//        aDP.parseDirectory(PATH_TO_TEST, new Callback() {
+//            @Override
+//            public void func(String a, String b) {
+//                aCI.index("TEST", a, b);
+//            }
+//        });
+//        queryDirectoryParse.parseDirectory(PATH_TO_TEST_UNKNOWN, new Callback() {
+//            @Override
+//            public void func(String a, String b) {
+//                queryIndex.index("UNKNOWN", a, b);
+//            }
+//        });
+
+		aRC.setCentralIndex(aCI);
+		aRC.setQueryIndex(queryIndex);
+		aRC.classifyTrainingData();
+		System.out.println("Rocchio: ");
+        aRC.classifyUnknownDocument();
+        System.out.println("Rocchio finished.\n");
+
 		/************************************************************/
 
 		aB.generateTerm(50);
-		aB.printSelectedWord();
+//		aB.printSelectedWord();
 
 		/** Classify **/
 		ArrayList<String> results = new ArrayList<String>();
@@ -66,8 +99,6 @@ public class Main {
 		for(String r: results){
 			System.out.println(r);
 		}
-
-
 
 	}
 }
