@@ -83,7 +83,7 @@ public class Main {
 		/************************************************************/
 
 		aB.generateTerm(50);
-		aB.printSelectedWord();
+//		aB.printSelectedWord();
 
 		/** Classify **/
 		ArrayList<String> results = new ArrayList<String>();

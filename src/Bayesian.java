@@ -77,7 +77,7 @@ public class Bayesian{
 	 */
 	public String classify(String pFileName, String pFileContent){
 
-		System.out.println(pFileName);
+//		System.out.println(pFileName);
 		String[] words = pFileContent.split("\\s+");
 
 		double arg_max = 0;
@@ -97,7 +97,7 @@ public class Bayesian{
 				arg_max = arg;
 				max_class 	= c;
 			}
-			System.out.println(c + " : " + pi);
+//			System.out.println(c + " : " + pi);
 		}
 //		System.out.println(pFileName + " : " + max_class);
 
@@ -122,17 +122,17 @@ public class Bayesian{
 		}
 
 		// Generate PTC table
-		System.out.println("PTC Table");
+//		System.out.println("PTC Table");
 		mPTCTable = new HashMap<String, HashMap<String, Double>>();
 		for(String term: pTerms){
 			HashMap<String, Double> row = new HashMap<String, Double>();
-			System.out.print(term + "\t");
+//			System.out.print(term + "\t");
 			for(String c : aCI.getClassName()){
 				// Calculate PTC for each class for the term
 				row.put(c, calcPTC(c, term, sumFTC, pTerms.size()));
-				System.out.print(c+":"+row.get(c) + "\t\t");
+//				System.out.print(c+":"+row.get(c) + "\t\t");
 			}
-			System.out.println();
+//			System.out.println();
 			mPTCTable.put(term, row);
 		}
 	}
