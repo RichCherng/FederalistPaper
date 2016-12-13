@@ -52,7 +52,11 @@ public class Main {
 			}
 		});
 
-		/** Query directory parsing and indexing **/
+
+
+		/** Classify **/
+
+		// Query directory parsing and indexing
 		queryDirectoryParse.parseDirectory(PATH_HAMILTON_OR_MADISON, new Callback() {
             @Override
             public void func(String pFileName, String pFileContent) {
@@ -60,18 +64,6 @@ public class Main {
             }
         });
 
-//        aDP.parseDirectory(PATH_TO_TEST, new Callback() {
-//            @Override
-//            public void func(String a, String b) {
-//                aCI.index("TEST", a, b);
-//            }
-//        });
-//        queryDirectoryParse.parseDirectory(PATH_TO_TEST_UNKNOWN, new Callback() {
-//            @Override
-//            public void func(String a, String b) {
-//                queryIndex.index("UNKNOWN", a, b);
-//            }
-//        });
 
 		aRC.setCentralIndex(aCI);
 		aRC.setQueryIndex(queryIndex);
@@ -85,7 +77,7 @@ public class Main {
 		aB.generateTerm(50);
 //		aB.printSelectedWord();
 
-		/** Classify **/
+
 		ArrayList<String> results = new ArrayList<String>();
 		aDP.parseDirectory(PATH_HAMILTON_OR_MADISON, new Callback(){
 

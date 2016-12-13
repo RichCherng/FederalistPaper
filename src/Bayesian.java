@@ -34,7 +34,6 @@ public class Bayesian{
 
 		/** Find top N term with the highest iValues **/
 		HashMap<Double, ArrayList<String>> valueMap = new HashMap<Double, ArrayList<String>>();
-////		ArrayList<Double> values = new ArrayList<Double>();
 		HashSet<Double> values = new HashSet<Double>();
 		for(String word: vocabList){
 			double iValue = maxCalcI(word);
@@ -185,59 +184,11 @@ public class Bayesian{
 		double N10 = N1x - N11;
 		double N00 = Nx0 - N10;
 
-
-//		BigDecimal  A = new BigDecimal(N * N11);
-//		BigDecimal  B = new BigDecimal(N1x*Nx1);
-//		System.out.println(A.toString());
-//		System.out.println(N*N11);
-//		System.out.println(B.toString());
-//		System.out.println(N1x*Nx1);
-
-
-
-//		double a1 = (N11/N) + ( Math.log( (N*N11) / (N1x*Nx1) ) / Math.log(2) );
-//		double a2 = (N10/N) + ( Math.log( (N*N10) / (N1x*Nx0) ) / Math.log(2) );
-//		double a3 = (N01/N) + ( Math.log( (N*N01) / (N0x*Nx1) ) / Math.log(2) );
-//		double a4 = (N00/N) + ( Math.log( (N*N00) / (N0x*N0x) ) / Math.log(2) );
-
 		double ar1 = (N11/N) * log2( N*N11, N1x*Nx1 );
 		double ar2 = (N10/N) * log2( N*N10, N1x*Nx0 );
 		double ar3 = (N01/N) * log2( N*N01, N0x*Nx1 );
 		double ar4 = (N00/N) * log2( N*N00, N0x*Nx0 );
-//		System.out.println(N00 + " " + (N0x - N01));
 
-//				System.out.println(pWord + " : "  + N11);
-//		System.out.println(pWord + "  "+ N11 + " : " + N1x);
-//		System.out.println(Nx1);
-//		System.out.println(Nx0);
-//		System.out.println(N0x);
-
-//		System.out.println(Math.log(0));
-//		System.out.println(ar1);
-//		System.out.println(ar2);
-//		System.out.println(ar3);
-//		System.out.println(ar4);
-//		System.out.println((float)(N*N11) / (float)(N1x*Nx1));
-//		System.out.println((float)(N*N10) / (float)(N1x*Nx0));
-//		System.out.println((float)(N*N01) / (float)(N0x*Nx1));
-//		System.out.println((float)(N*N00) / (float)(N0x*N0x));
-//		if(pWord.equals("upon")){
-//			System.out.println( pClassName + " "+ pWord + " : " + (ar1 + ar2 + ar3 + ar4));
-//			System.out.println("N11 : "+N11);
-//			System.out.println("N00 : "+N00);
-//			System.out.println("N10 : "+N10);
-//			System.out.println("N01 : "+N01);
-//			System.out.println("N1X : "+N1x);
-//			System.out.println("N0X : "+N0x);
-//			System.out.println("NX1 : "+Nx1);
-//			System.out.println("NX0 : "+Nx0);
-//
-//
-//			System.out.println("Log N11 " + log2( N*N11, N1x*Nx1 ));
-//			System.out.println("Log N10 " + log2( N*N10, N1x*Nx0 ));
-//			System.out.println("Log N01 " + log2( N*N01, N0x*Nx1 ));
-//			System.out.println("Log N00 " + log2( N*N00, N0x*Nx0 ));
-//		}
 		return ar1 + ar2 + ar3 + ar4;
 	}
 
@@ -254,10 +205,6 @@ public class Bayesian{
 		for(String s: mTerms){
 			System.out.println(s + " : " + mTermAuthor.get(s));
 		}
-	}
-
-	public void debug(){
-//		System.out.println()
 	}
 
 }
