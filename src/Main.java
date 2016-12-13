@@ -49,7 +49,7 @@ public class Main {
 
 		/************************************************************/
 
-		aB.generateTerm(50);
+		aB.generateTerm(10);
 		aB.printSelectedWord();
 
 		/** Classify **/
